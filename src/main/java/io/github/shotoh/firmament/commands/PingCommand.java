@@ -8,6 +8,7 @@ import org.incendo.cloud.discord.jda5.JDAInteraction;
 import org.incendo.cloud.discord.jda5.ReplySetting;
 import org.incendo.cloud.discord.slash.CommandScope;
 import org.incendo.cloud.parser.standard.StringParser;
+import org.incendo.cloud.suggestion.SuggestionProvider;
 
 public class PingCommand implements Command {
     @Override
@@ -16,7 +17,7 @@ public class PingCommand implements Command {
                 commandManager.commandBuilder("ping", Description.of("A ping command"))
                         .apply(ReplySetting.defer(true))
                         .apply(CommandScope.guilds())
-                        .required("message", StringParser.greedyStringParser(), Description.of("The message"))
+                        .required("message", StringParser.greedyStringParser(), Description.of("The message"), SuggestionProvider.noSuggestions())
                         .handler(context -> {
                             JDAInteraction interaction = context.sender();
                             GenericCommandInteractionEvent event = interaction.interactionEvent();

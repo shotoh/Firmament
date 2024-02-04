@@ -11,7 +11,6 @@ val jdaVersion = "5.0.0-beta.20"
 
 repositories {
     mavenCentral()
-    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -20,7 +19,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("ch.qos.logback:logback-classic:1.4.12")
     implementation("org.incendo:cloud-jda5:1.0.0-beta.1")
-    implementation("com.github.Querz:NBT:6.1")
+    implementation("me.nullicorn:Nedit:2.2.0")
 }
 
 tasks.withType<JavaCompile> {

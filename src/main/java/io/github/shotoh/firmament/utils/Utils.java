@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 
 import java.io.IOException;
@@ -45,20 +46,38 @@ public class Utils {
                 }
             }).flatMap(Collection::stream).filter(AuctionItem::bin).forEach(list::add);
         } catch (ExecutionException | InterruptedException e) {
+            Firmament.LOGGER.warn("Error scanning auctions");
             throw new RuntimeException(e);
         }
         return list;
     }
 
     public static AuctionPage getAuctionPage(int page) {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet("https://api.hypixel.net/v2/skyblock/auctions?page=" + page);
             httpGet.addHeader("content-type", "application/json; charset=UTF-8");
-            ClassicHttpResponse httpResponse = httpClient.execute(httpGet, response -> response);
-            return Firmament.GSON.fromJson(new InputStreamReader(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8), AuctionPage.class);
+            try (ClassicHttpResponse httpResponse = httpClient.execute(httpGet)) {
+                return Firmament.GSON.fromJson(new InputStreamReader(httpResponse.getEntity().getContent(), StandardCharsets.UTF_8), AuctionPage.class);
+            }
         } catch (IOException e) {
+            Firmament.LOGGER.warn("Error scanning auction page");
             throw new RuntimeException(e);
         }
+    }
+
+    public static String formatPrice(long price) {
+        double div = 1.0;
+        String suffix = "";
+        if (price >= 1000000) {
+            div = 1000000.0;
+            suffix = "M";
+        } else if (price >= 1000) {
+            div = 1000.0;
+            suffix = "K";
+        }
+        String val = price / div + "";
+        if (val.contains(".") && val.substring(val.indexOf(".")).length() > 2) val = val.substring(0, val.indexOf(".") + 2);
+        return val + suffix;
     }
 
     /*
