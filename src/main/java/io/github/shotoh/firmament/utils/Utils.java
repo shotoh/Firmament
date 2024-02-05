@@ -26,6 +26,7 @@ public class Utils {
     }
 
     public static List<AuctionItem> scanAuctions() {
+        Firmament.LOGGER.info("Scanning auctions...");
         List<AuctionItem> list = new ArrayList<>();
         try {
             AuctionPage firstPage = getAuctionPage(0);
@@ -53,6 +54,7 @@ public class Utils {
     }
 
     public static AuctionPage getAuctionPage(int page) {
+        Firmament.LOGGER.info("Getting auction page: " + page);
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet("https://api.hypixel.net/v2/skyblock/auctions?page=" + page);
             httpGet.addHeader("content-type", "application/json; charset=UTF-8");
@@ -78,6 +80,13 @@ public class Utils {
         String val = price / div + "";
         if (val.contains(".") && val.substring(val.indexOf(".")).length() > 2) val = val.substring(0, val.indexOf(".") + 2);
         return val + suffix;
+    }
+
+    public static boolean containsInList(List<String> list, String string) {
+        for (String s : list) {
+            if (string.contains(s)) return true;
+        }
+        return false;
     }
 
     /*
