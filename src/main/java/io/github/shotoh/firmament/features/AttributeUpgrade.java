@@ -69,7 +69,8 @@ public class AttributeUpgrade {
             items.remove(itemsIndex);
             stringBuilder.append("`/viewauction ").append(attributeItem.uuid())
                     .append("` (**").append(attributeItem.level()).append("**) (**")
-                    .append(Utils.formatPrice(attributeItem.startingBid())).append("**)");
+                    .append(Utils.formatPrice(attributeItem.startingBid())).append("**) (**")
+                    .append(Utils.formatPrice(attributeItem.pricePerLevel() * 16)).append("**)");
             String attributeItemName = attributeItem.itemName();
             if (attributeItemName.equals("Attribute Shard")) {
                 stringBuilder.append(" [**S**]");
